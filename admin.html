@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Upload Edit</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Admin: Upload New Edit</h2>
+
+  <div id="auth">
+    <input type="password" id="password" placeholder="Enter password" />
+    <button onclick="checkPassword()">Login</button>
+    <p id="auth-error" style="color: red;"></p>
+  </div>
+
+  <div id="upload-form" style="display: none;">
+    <input type="file" id="fileInput" accept="image/*,video/*"><br><br>
+    <input type="text" id="captionInput" placeholder="Write a caption"><br><br>
+    <button onclick="uploadEdit()">Upload</button>
+    <p id="upload-status"></p>
+  </div>
+
+  <script>
+    const correctPassword = "editqueen"; // You can change this!
+
+    function checkPassword() {
+      const input = document.getElementById("password").value;
+      if (input === correctPassword) {
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("upload-form").style.display = "block";
+      } else {
+        document.getElementById("auth-error").textContent = "Incorrect password.";
+      }
+    }
+
+    function uploadEdit() {
+      const file = document.getElementById("fileInput").files[0];
+      const caption = document.getElementById("captionInput").value;
+
+      if (!file || !caption) {
+        document.getElementById("upload-status").textContent = "Please select a file and write a caption.";
+        return;
+      }
+
+      // Placeholder logic: this just shows the message
+      // You will need backend support to handle real uploads
+      document.getElementById("upload-status").textContent = `Pretending to upload: ${file.name} with caption: "${caption}"`;
+
+      // You’d send this to a backend in the next step
+    }
+  </script>
+</body>
+</html>

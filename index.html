@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Edits Gallery</title>
+  <style>
+    body {
+      background: #ffe4f0;
+      color: #d81e5b;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem 1rem;
+      margin: 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      text-shadow: 1px 1px 4px #f9a1c0;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+    }
+    .card {
+      background: #fff0f6;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 6px 12px rgba(216, 30, 91, 0.2);
+    }
+    iframe {
+      width: 100%;
+      height: 250px;
+      border-radius: 10px;
+      border: none;
+    }
+    .caption {
+      margin-top: 0.8rem;
+      font-size: 1rem;
+      color: #9b154e;
+    }
+    @media (max-width: 600px) {
+      iframe {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>✨ Jade's Edits of the Day✨</h1>
+  <div class="gallery" id="gallery">
+    <p>Loading edits...</p>
+  </div>
+
+  <script>
+     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSCx4BrGuBdHCXGsZDudjJ2AEB2kpnwFn6WDjPuUyQTU7xHjIGd947nwSZZsdjJo11ojuTIRvypKJ7g/pub?gid=0&single=true&output=csv';
+
+    fetch(sheetUrl)
+      .then(response => response.text())
+      .then(csv => {
+        const rows = csv.trim().split('\n').slice(1); // Skip header
+        const gallery = document.getElementById('gallery');
+        gallery.innerHTML = '';
+
+        rows.forEach(row => {
+          const [link, caption] = row.split(',');
+
+          const match = link.match(/\/d\/([^/]+)\//);
+          const fileId = match ? match[1] : null;
+          if (!fileId) return;
+
+          const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>
+            <div class="caption">${caption || ''}</div>
+          `;
+          gallery.appendChild(card);
+        });
+      })
+      .catch(() => {
+        document.getElementById('gallery').innerHTML = '<p>Failed to load edits.</p>';
+      });
+  </script>
+</body>
+</html>
